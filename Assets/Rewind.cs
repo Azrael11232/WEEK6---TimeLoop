@@ -1,25 +1,37 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Rewind : MonoBehaviour
 {
-    public List<PlayerPosition> PlayerPos = new List<PlayerPosition>();
+    public List<PlayerPositions> PlayerPos = new List<PlayerPositions>();
     public  Rigidbody2D rb;
+    public Renderer self;
+
     private bool rewinding = false;
 
     void Update()
     {
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            self.material.color = Color.lightBlue;
+            Do();
+        }
+
         if (rewinding == true)
             return;
 
-        PlayerPos.Add(new PlayerPosition
+        if (Input.GetKey(KeyCode.Space))
         {
-            position = transform.position,
-            velocity = rb.linearVelocity
-        });
+            self.material.color = Color.blue;
+            rewinds();
+        }
+        
     }
+
 
     public void Do()
     {
@@ -27,6 +39,16 @@ public class Rewind : MonoBehaviour
             return;
 
         StartCoroutine(RewindCo());
+    }    
+    
+    public void rewinds()
+    {
+        PlayerPos.Add(new PlayerPositions
+        {
+            position = transform.position,
+            velocity = rb.linearVelocity
+        });
+        
     }
 
     public IEnumerator RewindCo()
@@ -47,4 +69,13 @@ public class Rewind : MonoBehaviour
 
         PlayerPos.Clear();
     }
+}
+
+
+[System.Serializable]
+
+public class PlayerPositions
+{
+    public Vector2 position;
+    public Vector2 velocity;
 }
