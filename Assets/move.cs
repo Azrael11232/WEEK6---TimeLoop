@@ -4,16 +4,9 @@ public class move : MonoBehaviour
 {
     public Rigidbody2D rb;
     public float speed;
+    public float jumpf;
     public bool jump = true;
-    private Vector2 moveInput;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         movement();
@@ -21,28 +14,21 @@ public class move : MonoBehaviour
 
     void movement()
     {
-        moveInput = Vector2.zero;
+        float x = 0;
 
-        if (Input.GetKey(KeyCode.W) && jump == transform)
+        if (Input.GetKey(KeyCode.LeftArrow))
+            x = -speed;
+        if (Input.GetKey(KeyCode.RightArrow))
+            x = speed;
+        if (Input.GetKeyDown(KeyCode.UpArrow) && jump == true)
         {
-            moveInput *= Vector2.up;
+            rb.AddForce(Vector2.up * jumpf);
             jump = false;
         }
 
-        if (Input.GetKey(KeyCode.S))
-            moveInput += Vector2.down;
-
-        if (Input.GetKey(KeyCode.A))
-            moveInput += Vector2.left;
-
-        if (Input.GetKey(KeyCode.D))
-            moveInput += Vector2.right;
-
-        moveInput = moveInput.normalized;
-
-        Vector2 newPosition = rb.position + moveInput * speed * Time.fixedDeltaTime;
-        rb.MovePosition(newPosition);
+        rb.linearVelocity = new Vector2(x,rb.linearVelocityY);
     }
+
 
     void OnCollisionEnter2D(Collision2D collision)
     {
